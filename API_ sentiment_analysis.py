@@ -3,6 +3,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from flask import Flask, jsonify, request, make_response
 
 app = Flask(__name__)
+cors = CORS(app, resources={r'/api/*':{'origins':'http://127.0.0.1:5000/'}})
 
 def sentiment_scores(sentence): 
     sid_obj = SentimentIntensityAnalyzer() 
@@ -10,6 +11,7 @@ def sentiment_scores(sentence):
     return sentiment_dict['compound']
 
 @app.route('/api/analizar',methods = ['POST'])
+@cross_origin()
 def create_actividad():
     if not 'texto' in request.json:
         return make_response(jsonify({'error': 'No se encuentra un texto'}), 404) #esta es la mejor manera de manejar errores
