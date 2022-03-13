@@ -1,9 +1,9 @@
 from textblob import TextBlob
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer 
 from flask import Flask, jsonify, request, make_response
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-cors = CORS(app, resources={r'/api/*':{'origins':'http://127.0.0.1:5000/'}})
 
 def sentiment_scores(sentence): 
     sid_obj = SentimentIntensityAnalyzer() 
