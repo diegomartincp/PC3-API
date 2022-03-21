@@ -16,7 +16,6 @@ def sentiment_scores(sentence): #Le pasas la frase
 def analizar():
     if not 'texto' in request.json:
         return make_response(jsonify({'error': 'No se encuentra un texto'}), 404) #Si no se manda texto se devuelve error
-    texto = request.json['texto'] #Si hay texto recogemos el texto
     blob = TextBlob(texto)  #Objeto blob con el texto recogido
     texto_traducido = str(blob.translate(to='en'))  #Se traduce el texto a 'en' inglés
     resultado = sentiment_scores(texto_traducido)   #En resultado recogemos el compound del texto traducido
