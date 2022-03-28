@@ -1,5 +1,4 @@
 import tweepy
-import pandas as pd
 
 bearer_token = 'AAAAAAAAAAAAAAAAAAAAAEEuaQEAAAAAmJVCeL1N%2FiSo9G6YVLB%2FhPoHjjg%3DkfiN8gv5mGV6WEHsle74BxyyQkAdJt1O6ET4WuarlWk5JTKN57'
 client = tweepy.Client(bearer_token=bearer_token)
