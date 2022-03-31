@@ -1,65 +1,78 @@
 import requests
 from bs4 import BeautifulSoup
 
-
+#Reemplazamos los espacios por + y convertimos a minusculas el texto
 print("introduzca la ciudad")
-ciudad = input().replace (" ", "+").lower() # = "tres+cantos"
+ciudad = input().replace (" ", "+").lower()     # = "tres+cantos"
+#Reemplazamos los espacios por -
 print("introduzca la fecha inicio año-mes-dia")
-fechaIni = input().replace (" ", "-") # = "2022-03-01"
+fechaIni = input().replace (" ", "-")           # = "2022-03-01"
 print("introduzca la fecha fin año-mes-dia")
-fechaFin = input().replace (" ", "-")# = "2022-03-15"
-lista_links=[]
+fechaFin = input().replace (" ", "-")           # = "2022-03-15"
 
+#Acceder a los links de las noticias
+
+lista_links=[] #almacenara los links de cada una de las noticias
+#url y request a esta
 url="https://www.20minutos.es/busqueda/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
 r = requests.get(url)
 #print(r.status_code) #200 bueno / 404 error
 
-numero = 1
+numero = 1 #nos permitira acceder a las diferentes paginas de la web
+#mientras que exista la pagina web...
 while (r.status_code == 200):
-    url="https://www.20minutos.es/busqueda/"+str(numero)+"/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
-    r = requests.get(url)
-
-    ##Utilizamos beautfulSoup
+    #Utilizamos beautfulSoup
     soup = BeautifulSoup(r.content, "html.parser")
+    #Buscamos todas las etiquetas donde se encuentra el link de cada noticia
     h1 = soup.findAll('div', {'class': 'media-content'})
+    #Dentro del H1, buscamos el href, obtenemos el texto y lo añadimos a la lista_links
     for element in h1:
         link = element.findChildren("a" , href=True)
-        #Para cada uno de los links de los h2 extraemos SOLO el atributo href
+        #Para cada uno de los links de los h1 extraemos SOLO el atributo href
         for i in link:
             link_completo=i['href'] #Extraemos atributo href
-            #print( link_completo)
-            lista_links.insert(0,link_completo)
+            lista_links.insert(0,link_completo) #Añadimos a lista_links el link de cada una de las noticias
     
-    
+    #Modificamos la url para acceder a la siguiente pagina (str(numero)). En caso de que no exista, salimos del bucle while.
     numero = numero + 1
     url="https://www.20minutos.es/busqueda/"+str(numero)+"/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
     r = requests.get(url)
 
 
-print(len(lista_links))
+#print(len(lista_links))
 
-noticiaCompleta = []
-tituloNoticia = []
-textoNoticia = []
+#ACEDER AL CONTENIDO DE CADA UNA DE LAS NOTICIAS
+#Varaibles para almacenar la informacion:
+noticiaCompleta = [] #Almacena url, titulo, texto
+tituloNoticia = []   #Almacena titulo
+textoNoticia = []    #Almacena texto
 
+#Accedemos a cada uno de los links obtenidos anteriormente
 for url in lista_links:
     r1 = requests.get(url)
     soup1 = BeautifulSoup(r1.content, "html.parser")
     
+    #Buscamos la etiqueta que contenga el titulo de la noticia
     titulo = soup1.find('h1', {'class': 'article-title'})
+    #Buscamos la etiqueta que contenga el contenido
     parrafos = soup1.find('div', {'class': 'article-text'})
+    #Despues obtenemos solo los parrafos (contenido importante)
     texto = parrafos.findAll('p')
     
-    contenidoTag = []
+    #Unimos el contenido de todos los parrafos, accediendo a cada uno de ellos y uniendolos (join) dejando un espacio entre ellos
+    contenidoTag = [] 
     for i in range(len(texto)):
-            contenidoTag.append((texto[i].text).strip())
+            contenidoTag.append((texto[i].text)) #si da error .strip() (Visto con Borja)
     tag = " ".join(contenidoTag)
     
-    parrafosCont = tag.lower()
-    tituloCont = titulo.text.lower()
+    #Variable para almacenar el titulo y el contenido
+    tituloCont = titulo.text.lower()    #obtenemos solo el texto y transformamos a minuscula
+    parrafosCont = tag.lower()          #transformamos a minuscula
 
+    #Insertamos el contenido en las variables
     noticiaCompleta.insert(0,[url,tituloCont,parrafosCont])
     tituloNoticia.insert(0,tituloCont)
     textoNoticia.insert(0,parrafosCont)
 
+#Mostramos las noticias
 print(textoNoticia)  
