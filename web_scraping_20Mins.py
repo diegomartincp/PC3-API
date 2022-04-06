@@ -1,20 +1,23 @@
 import requests
 from bs4 import BeautifulSoup
+import re
 
 #Reemplazamos los espacios por + y convertimos a minusculas el texto
-print("introduzca la ciudad")
-ciudad = input().replace (" ", "+").lower()     # = "tres+cantos"
+#print("introduzca la ciudad")
+#ciudad = input().replace (" ", "+").lower()     # = "tres+cantos"
 #Reemplazamos los espacios por -
-print("introduzca la fecha inicio año-mes-dia")
-fechaIni = input().replace (" ", "-")           # = "2022-03-01"
-print("introduzca la fecha fin año-mes-dia")
-fechaFin = input().replace (" ", "-")           # = "2022-03-15"
+#print("introduzca la fecha inicio año-mes-dia")
+#fechaIni = input().replace (" ", "-")           # = "2022-03-01"
+#print("introduzca la fecha fin año-mes-dia")
+#fechaFin = input().replace (" ", "-")           # = "2022-03-15"
 
 #Acceder a los links de las noticias
 
 lista_links=[] #almacenara los links de cada una de las noticias
 #url y request a esta
-url="https://www.20minutos.es/busqueda/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
+#url="https://www.20minutos.es/busqueda/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
+url="https://www.20minutos.es/busqueda/?q=tres+cantos&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D=2022-03-01&publishedAt%5Buntil%5D=2022-03-02"
+
 r = requests.get(url)
 #print(r.status_code) #200 bueno / 404 error
 
@@ -35,7 +38,9 @@ while (r.status_code == 200):
     
     #Modificamos la url para acceder a la siguiente pagina (str(numero)). En caso de que no exista, salimos del bucle while.
     numero = numero + 1
-    url="https://www.20minutos.es/busqueda/"+str(numero)+"/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
+    url="https://www.20minutos.es/busqueda/"+str(numero)+"?q=tres+cantos&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D=2022-03-01&publishedAt%5Buntil%5D=2022-03-02"
+
+    #url="https://www.20minutos.es/busqueda/"+str(numero)+"/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
     r = requests.get(url)
 
 
@@ -58,7 +63,18 @@ for url in lista_links:
     parrafos = soup1.find('div', {'class': 'article-text'})
     #Despues obtenemos solo los parrafos (contenido importante)
     texto = parrafos.findAll('p')
+    #obtenemos la fecha
+    fechas = soup1.find('span', {'class': 'article-date'})
+    #obtenemos el texto de la fecha
+    fecha = fechas.text
+    #aplicamos regex, para obtener el dia, mes y año en grupo separado
+    objetoFecha = re.search('(\d*)\.(\d*)\.(\d*)',fecha)
+    #reordenamos los grupos para tener la fecha en el formato de la url
+    objetoFecha = str(objetoFecha.group(3))+"-"+str(objetoFecha.group(2))+"-"+str(objetoFecha.group(1))
+    #print(str(objetoFecha.group(3))+"-"+str(objetoFecha.group(2))+"-"+str(objetoFecha.group(1)))
+    #print(fecha)
     
+        
     #Unimos el contenido de todos los parrafos, accediendo a cada uno de ellos y uniendolos (join) dejando un espacio entre ellos
     contenidoTag = [] 
     for i in range(len(texto)):
@@ -72,7 +88,7 @@ for url in lista_links:
     #Insertamos el contenido en las variables
     noticiaCompleta.insert(0,[url,tituloCont,parrafosCont])
     tituloNoticia.insert(0,tituloCont)
-    textoNoticia.insert(0,parrafosCont)
+    textoNoticia.insert(0,[parrafosCont, objetoFecha])
 
 #Mostramos las noticias
 print(textoNoticia)  
