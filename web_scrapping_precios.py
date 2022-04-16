@@ -17,5 +17,5 @@ soup = BeautifulSoup(request_fotocasa.content, "html.parser")
 div_contenido = soup.find('div', {'class': 't-panel comprar active'}) #Div con precios
 precios = div_contenido.findAll('div', {'class': 'b-detail_title'})
 print(query)
-print(precios[0].text)
-print(precios[1].text)
+print(precios[0].text)  #Precio metro cuadrado
+print(precios[1].text)  #Precio medio

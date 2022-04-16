@@ -21,7 +21,7 @@ api = tweepy.API(auth)
 
 desde_fecha="202201030000"
 hasta_fecha="202201040000"
-query_ = "Tres Cantos"
+query_ = "Tres Cantos"  #Búsqueda
 
 
 #Realiza la búsqueda en la api
