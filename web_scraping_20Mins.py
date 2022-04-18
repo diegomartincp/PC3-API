@@ -3,20 +3,20 @@ from bs4 import BeautifulSoup
 import re
 
 #Reemplazamos los espacios por + y convertimos a minusculas el texto
-#print("introduzca la ciudad")
-#ciudad = input().replace (" ", "+").lower()     # = "tres+cantos"
+print("introduzca la ciudad")
+ciudad = input().replace (" ", "+").lower()     # = "tres+cantos"
 #Reemplazamos los espacios por -
-#print("introduzca la fecha inicio año-mes-dia")
-#fechaIni = input().replace (" ", "-")           # = "2022-03-01"
-#print("introduzca la fecha fin año-mes-dia")
-#fechaFin = input().replace (" ", "-")           # = "2022-03-15"
+print("introduzca la fecha inicio año-mes-dia")
+fechaIni = input().replace (" ", "-")           # = "2022-03-01"
+print("introduzca la fecha fin año-mes-dia")
+fechaFin = input().replace (" ", "-")           # = "2022-03-15"
 
 #Acceder a los links de las noticias
 
 lista_links=[] #almacenara los links de cada una de las noticias
 #url y request a esta
-#url="https://www.20minutos.es/busqueda/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
-url="https://www.20minutos.es/busqueda/?q=tres+cantos&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D=2022-03-01&publishedAt%5Buntil%5D=2022-03-02"
+url="https://www.20minutos.es/busqueda/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
+#url="https://www.20minutos.es/busqueda/?q=tres+cantos&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D=2022-03-01&publishedAt%5Buntil%5D=2022-03-02"
 
 r = requests.get(url)
 #print(r.status_code) #200 bueno / 404 error
@@ -44,7 +44,6 @@ while (r.status_code == 200):
     r = requests.get(url)
 
 
-#print(len(lista_links))
 
 #ACEDER AL CONTENIDO DE CADA UNA DE LAS NOTICIAS
 #Varaibles para almacenar la informacion:
@@ -56,7 +55,7 @@ textoNoticia = []    #Almacena texto
 import pandas as pd  
 df = pd.DataFrame(columns = ['Titulo', 'Contenido', 'Fecha'])
 
-print(len(lista_links))
+
 #Accedemos a cada uno de los links obtenidos anteriormente
 for url in lista_links:
     r1 = requests.get(url)

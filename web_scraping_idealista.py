@@ -34,7 +34,7 @@ for oper in operacion:
         df=df.append(new_row, ignore_index=True)
 
 #mostramos el resultado
-#print(total)
+print(total)
 
 # Print the output.  
 print(df)  
