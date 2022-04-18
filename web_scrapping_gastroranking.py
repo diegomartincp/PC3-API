@@ -12,6 +12,8 @@ def gastrorankingData(ca, municipio, nombres, valoraciones, etiquetas):
     contenidoGastroranking = BeautifulSoup(pageGastroranking.content, 'html.parser')
     
     # sacar el título, ranking y etiquetas de los restaurantes
+    df = pd.DataFrame(columns=['nombreRestaurante', 'valoracion', 'etiquetas'])
+
     #Nombre
     for h3 in contenidoGastroranking.find_all('h3', class_='restaurantName'):
         for a in h3.find_all('a'):
@@ -41,15 +43,18 @@ def gastrorankingData(ca, municipio, nombres, valoraciones, etiquetas):
     print()
     print(str(len(nombres))+" "+str(len(valoraciones))+" "+str(len(etiquetas)))
     
-    #insertamos los datos en un dataframe NO USAR, FUNCIONAMIENTO PARA INSERCIÓN DATAFRAME
-    #df = pd.DataFrame(columns=['nombreRestaurante', 'valoracion', 'etiquetas'])
-    #for n in range(len(nombres)):
-    #    #df.append({'nombreRestaurante' : nombres[n] , 'valoracion' : valoraciones[n], 'etiquetasetiquetas' : etiquetas[n]} , ignore_index=True)
-    #    new_list = [ (nombres[n], valoraciones[n], etiquetas[n])]
-    #    print(new_list)
-    #    dfNew = pd.DataFrame(new_list, columns = ['nombreRestaurante' , 'valoracion', 'etiquetas'])
-    #    df = df.append(dfNew,ignore_index=True)
-    #return df
+    #insertamos los datos en un dataframe REVISAR
+    for n in range(len(nombres)):
+        #df.append({'nombreRestaurante' : nombres[n] , 'valoracion' : valoraciones[n], 'etiquetasetiquetas' : etiquetas[n]} , ignore_index=True)
+        new_list = [ (nombres[n], valoraciones[n], etiquetas[n])]
+        print(new_list)
+        dfNew = pd.DataFrame(new_list, columns = ['nombreRestaurante' , 'valoracion', 'etiquetas'])
+        df = df.append(dfNew,ignore_index=True)
+        
+    #Exportamos el dataframe a un csv
+    df.to_csv('infoGastroranking.csv', index=False)
+    
+    return df
 
 
 
