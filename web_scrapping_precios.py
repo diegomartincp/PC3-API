@@ -19,3 +19,17 @@ precios = div_contenido.findAll('div', {'class': 'b-detail_title'})
 print(query)
 print(precios[0].text)  #Precio metro cuadrado
 print(precios[1].text)  #Precio medio
+
+#Crear dataframe
+import pandas as pd  
+# assign data of lists.  
+data = {'Query': [query], 'Metro Cuadrado': precios[0].text, 'Precio Medio':precios[1].text}  
+  
+# Create DataFrame  
+df = pd.DataFrame(data)  
+  
+# Print the output.  
+print(df)  
+
+#Exportar a .csv
+df.to_csv("precios.csv", encoding="utf-8") 
