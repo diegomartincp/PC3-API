@@ -52,6 +52,11 @@ noticiaCompleta = [] #Almacena url, titulo, texto
 tituloNoticia = []   #Almacena titulo
 textoNoticia = []    #Almacena texto
 
+#Crear dataframe
+import pandas as pd  
+df = pd.DataFrame(columns = ['Titulo', 'Contenido', 'Fecha'])
+
+print(len(lista_links))
 #Accedemos a cada uno de los links obtenidos anteriormente
 for url in lista_links:
     r1 = requests.get(url)
@@ -85,10 +90,21 @@ for url in lista_links:
     tituloCont = titulo.text.lower()    #obtenemos solo el texto y transformamos a minuscula
     parrafosCont = tag.lower()          #transformamos a minuscula
 
+    #rellenamos el dataframe
+    new_row = {'Titulo':tituloCont, 'Contenido':parrafosCont, 'Fecha':objetoFecha}
+    df=df.append(new_row, ignore_index=True)
+
     #Insertamos el contenido en las variables
     noticiaCompleta.insert(0,[url,tituloCont,parrafosCont])
     tituloNoticia.insert(0,tituloCont)
     textoNoticia.insert(0,[parrafosCont, objetoFecha])
 
+
+# Print the output.  
+print(df)  
+
+#Exportar a .csv
+df.to_csv("noticias.csv", encoding="utf-8") 
+
 #Mostramos las noticias
-print(textoNoticia)  
+#print(textoNoticia)  
