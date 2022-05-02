@@ -38,9 +38,9 @@ while (r.status_code == 200):
     
     #Modificamos la url para acceder a la siguiente pagina (str(numero)). En caso de que no exista, salimos del bucle while.
     numero = numero + 1
-    url="https://www.20minutos.es/busqueda/"+str(numero)+"?q=tres+cantos&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D=2022-03-01&publishedAt%5Buntil%5D=2022-03-02"
+    #url="https://www.20minutos.es/busqueda/"+str(numero)+"?q=tres+cantos&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D=2022-03-01&publishedAt%5Buntil%5D=2022-03-02"
 
-    #url="https://www.20minutos.es/busqueda/"+str(numero)+"/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
+    url="https://www.20minutos.es/busqueda/"+str(numero)+"/?q="+ciudad+"&sort_field=publishedAt&category=&publishedAt%5Bfrom%5D="+fechaIni+"&publishedAt%5Buntil%5D="+fechaFin
     r = requests.get(url)
 
 
